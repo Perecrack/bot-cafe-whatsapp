@@ -11,7 +11,7 @@ let nombreArchivo = '';
 let resumenDatos = {};
 
 // Tu API Key de OpenAI
-const OPENAI_API_KEY = 'sk-proj-bW9pC6xbgcnb_sGYaZdJfNAojGUi_m1jPoYWtsEz5lJ8z_iTanheXrXWnKKkXgkS0ZLCDvRKhWT3BlbkFJA0JuZgCpPzqZfFm_nLL08S4dVtYzA6XtcUz7VguCsA';
+const OPENAI_API_KEY = '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';
 
 // 🌐 SISTEMA ANTI-SLEEP PARA RENDER
 function configurarAntiSleep() {
