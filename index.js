@@ -51,7 +51,7 @@ function analizarExcel(rawData) {
 }
 
 function analizarCSV(textoCSV) {
-  const records = csvParse(textoCSV, { skip_empty_lines: true });
+  const records = parse(textoCSV, { skip_empty_lines: true });
   return analizarExcel(records);
 }
 
