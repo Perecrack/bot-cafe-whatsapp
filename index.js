@@ -10,16 +10,49 @@ let archivoCargado = false;
 let nombreArchivo = '';
 let resumenDatos = {};
 
-// 🔐 API KEY SEGURA (desde variable de entorno)
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Asegúrate de tener la API Key en variable de entorno
+const axios = require('axios');
 
-// Verificar que la API Key esté configurada
-if (!OPENAI_API_KEY) {
-    console.log('⚠️ ADVERTENCIA: API Key de OpenAI no configurada');
-    console.log('🔧 Configúrala en Render → Environment Variables');
-} else {
-    console.log('✅ API Key de OpenAI configurada correctamente');
+async function procesarPreguntaConIA(pregunta, intentos = 3) {
+  try {
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'Eres un asistente experto en café que responde en español con emojis.' },
+        { role: 'user', content: pregunta }
+      ],
+      max_tokens: 400,
+      temperature: 0.3
+    }, {
+      headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+    });
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    if (error.response && error.response.status === 429 && intentos > 0) {
+      console.log('⚠️ Límite de tasa alcanzado, esperando 10 segundos...');
+      await new Promise(resolve => setTimeout(resolve, 10000)); // espera 10 segundos
+      return procesarPreguntaConIA(pregunta, intentos - 1); // reintenta
+    }
+    console.error('❌ Error IA:', error.message);
+    return '❌ Lo siento, el sistema está saturado. Intenta de nuevo más tarde.';
+  }
 }
+
+// Uso en el evento de mensaje
+client.on('message', async msg => {
+  try {
+    if (!archivoCargado) {
+      msg.reply('👋 Por favor, envía un archivo Excel para comenzar.');
+      return;
+    }
+    msg.reply('🧠 Consultando IA... ⏳');
+    const respuesta = await procesarPreguntaConIA(msg.body);
+    msg.reply(respuesta);
+  } catch (error) {
+    console.error('❌ Error general:', error);
+    msg.reply('❌ Error procesando tu solicitud. Intenta de nuevo.');
+  }
+});
 
 // 🌐 SISTEMA ANTI-SLEEP
 function configurarAntiSleep() {
