@@ -4,7 +4,7 @@ const fs = require('fs');
 const XLSX = require('xlsx');
 const axios = require('axios');
 const http = require('http');
-const csvParse = require('csv-parse/lib/sync'); // Asegúrate de instalar csv-parse: npm install csv-parse
+const { parse } = require('csv-parse/sync');
 
 let datosCafe = [];
 let archivoCargado = false;
