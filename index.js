@@ -11,7 +11,6 @@ let nombreArchivo = '';
 let resumenDatos = {};
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Asegúrate de tener la API Key en variable de entorno
-const axios = require('axios');
 
 async function procesarPreguntaConIA(pregunta, intentos = 3) {
   try {
