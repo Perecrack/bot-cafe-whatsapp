@@ -56,7 +56,6 @@ function analizarCSV(textoCSV) {
 }
 
 function analizarJSON(jsonData) {
-  // Asumimos jsonData es un array de objetos con campos: persona, tipoCafe, precio, total
   const datos = [];
   const personas = new Set();
   const tiposCafe = new Set();
